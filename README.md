@@ -26,3 +26,7 @@ sudo sh setup.sh
 
 ### simple_render_test.py
 : 2021/12/10에 간단하게 Bipedal Walker의 랜더링을 구현한것입니다.
+
+
+### main_run.py
+: 2021/12/12에 간단하게 Bipdel Walker에 대한 A2C 학습모델을 만든것입니다. 
