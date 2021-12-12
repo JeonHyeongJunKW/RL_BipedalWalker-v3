@@ -29,4 +29,7 @@ sudo sh setup.sh
 
 
 ### main_run.py
-: 2021/12/12에 간단하게 Bipdel Walker에 대한 A2C 학습모델을 만든것입니다. 
+: 2021/12/11에 간단하게 Bipedal Walker에 대한 A2C 학습모델을 만든것입니다. 
+
+### main_learning_test.ipynb
+: 2021/12/12에 Bipedal Walker에 대한 하이퍼파라미터 튜닝을 위한 jupyter notebook code

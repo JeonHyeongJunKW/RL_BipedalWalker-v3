@@ -9,7 +9,7 @@ from Critic_and_Actor import Critic, Actor
 # helper function to convert numpy arrays to tensors
 def t(x):
     x = np.array(x) if not isinstance(x, np.ndarray) else x
-    return torch.from_numpy(x).float()
+    return torch.from_numpy(x).float().cuda() 
 
 def process_memory(memory, gamma=0.99):
     actions = []
@@ -44,10 +44,14 @@ class A2CLearner():
     self.actor_optim = torch.optim.Adam(self.actor.parameters(), lr=actor_lr)
     self.critic_optim = torch.optim.Adam(self.critic.parameters(),lr=critic_lr)
 
-  def learn(self,memory):
+  def learn(self,memory,writer, step_i):
     actions, rewards, states, next_states, dones = process_memory(memory,self.gamma)
-
+    
+    
     td_target = rewards +self.gamma*self.critic(next_states)*(1-dones)
+    
+      # print(next_states.shape)
+
     value = self.critic(states)
     adventage = td_target-value
 
@@ -60,6 +64,7 @@ class A2CLearner():
     actor_loss.backward()
     clip_grad_norm_(self.actor_optim,self.max_grad_norm)
     self.actor_optim.step()
+    writer.add_scalar("actor_loss", actor_loss.item(), step_i)
 
 
     ##critic
@@ -68,19 +73,21 @@ class A2CLearner():
     critic_loss.backward()
     clip_grad_norm_(self.critic_optim, self.max_grad_norm)
     self.critic_optim.step()
+    writer.add_scalar("critic_loss", critic_loss.item(), step_i)
 
-  def A2C_env_run(self,env):
+  def A2C_env_run(self,env, max_episode, writer):
+    #환경, 학습 횟수, 시각화도구 
 
     runner = Runner(env)
 
     step_on_memory = 16
-    episodes =500
+    episodes =max_episode
     episode_length =300
     total_steps = (episode_length*episodes)//step_on_memory
     
     for i in range(total_steps):
-      memory = runner.run(step_on_memory,self.actor)
-      self.learn(memory)
+      memory = runner.run(step_on_memory,self.actor,writer)
+      self.learn(memory,writer,i)
   
   def view(self,env):
     state = env.reset()

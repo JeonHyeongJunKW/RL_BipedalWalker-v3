@@ -7,7 +7,7 @@ from torch.nn import functional as F
 from Reward import GetReward
 def t(x):
     x = np.array(x) if not isinstance(x, np.ndarray) else x
-    return torch.from_numpy(x).float()
+    return torch.from_numpy(x).float().cuda() 
 
 class Runner():
   def __init__(self, env):
@@ -26,13 +26,13 @@ class Runner():
 
 
 
-  def run(self, max_steps, actor , memory=None):
+  def run(self, max_steps, actor, writer,memory=None):
     if not memory :memory = []
     for i in range(max_steps):
       if self.done : self.reset()
 
       dists = actor(t(self.state))
-      actions = dists.sample().detach().data.numpy()
+      actions = dists.sample().detach().cpu().data.numpy()
       actions_clipped = np.clip(actions, self.env.action_space.low.min(), self.env.action_space.high.max())
       next_state, reward, self.done, info = self.env.step(actions_clipped)
       memory.append((actions, GetReward(reward), self.state, next_state, self.done))
@@ -42,6 +42,6 @@ class Runner():
       if self.done:
         self.episode_rewards.append(self.episode_reward)
         if len(self.episode_rewards) % 10 == 0:
-            print("episode:", len(self.episode_rewards), ", episode reward:", self.episode_reward)
-            print(self.steps)
+            # print("episode:", len(self.episode_rewards), ", episode reward:", self.episode_reward)
+            writer.add_scalar("Episode Reward/train", self.episode_reward,len(self.episode_rewards))
     return memory
