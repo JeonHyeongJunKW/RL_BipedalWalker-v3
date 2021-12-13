@@ -33,3 +33,9 @@ sudo sh setup.sh
 
 ### main_learning_test.ipynb
 : 2021/12/12에 Bipedal Walker에 대한 하이퍼파라미터 튜닝을 위한 jupyter notebook code
+
+### model_test.py
+: 2021/12/13에 간단하게 완성된 모델입니다. 추가적인 학습이 필요합니다. 
+
+## Update
+2021/12/13 : 모델구조 및 하이퍼파라미터 수정(학습에 사용되는 batch size 조정)

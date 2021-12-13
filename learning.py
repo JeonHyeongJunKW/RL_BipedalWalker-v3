@@ -75,12 +75,12 @@ class A2CLearner():
     self.critic_optim.step()
     writer.add_scalar("critic_loss", critic_loss.item(), step_i)
 
-  def A2C_env_run(self,env, max_episode, writer):
+  def A2C_env_run(self,env, max_episode, writer, memory_s):
     #환경, 학습 횟수, 시각화도구 
 
     runner = Runner(env)
 
-    step_on_memory = 16
+    step_on_memory = memory_s
     episodes =max_episode
     episode_length =300
     total_steps = (episode_length*episodes)//step_on_memory
@@ -94,7 +94,7 @@ class A2CLearner():
     for i in range(300):
       env.render()
       dists = self.actor(t(state))
-      actions = dists.sample().detach().data.numpy()
+      actions = dists.sample().detach().cpu().data.numpy()
       actions_clipped = np.clip(actions, env.action_space.low.min(), env.action_space.high.max())
       next_state, _, done, info = env.step(actions_clipped)
       state = next_state

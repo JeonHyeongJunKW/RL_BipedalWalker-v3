@@ -39,23 +39,61 @@ class Actor(nn.Module):
     return torch.distributions.Normal(means,stds)
 
 class Actor_best(nn.Module):
-  def __init__(self,state_dim, n_actions, activation=nn.ReLU):
+  def __init__(self,state_dim, n_actions, std, activation=nn.ReLU):
     super().__init__()
     self.n_actions =n_actions
-    self.std = nn.Parameter(torch.full((n_actions,),0.5))
-    self.model = nn.Sequential(
+    self.std = nn.Parameter(torch.full((self.n_actions,),std)) 
+    self.model2 = nn.Sequential(
       nn.Linear(state_dim,512),
       activation(),
       nn.Linear(512,256),
       activation(),
       nn.Linear(256,64),
+      activation(),
+      nn.Linear(64,self.n_actions),## 모델의 평균수만큼 반환합니다.
       nn.Tanh(),
-      nn.Linear(64,n_actions)## 모델의 평균수만큼 반환합니다.
     )
   def forward(self,X):
-    means = self.model(X)
+    means = self.model2(X)
     stds = torch.clamp(self.std.exp(),1e-3,50)#편차의 범위를 바꿔버린다.
     return torch.distributions.Normal(means,stds)
+
+# class Actor_best_const_std(nn.Module):
+#   def __init__(self,state_dim, n_actions, std,activation=nn.ReLU):
+#     super().__init__()
+#     self.n_actions =n_actions
+#     self.std = nn.Parameter(torch.full((n_actions,),std))
+#     self.model = nn.Sequential(
+#       nn.Linear(state_dim,512),
+#       activation(),
+#       nn.Linear(512,256),
+#       activation(),
+#       nn.Linear(256,64),
+#       nn.Tanh(),
+#       nn.Linear(64,n_actions)## 모델의 평균수만큼 반환합니다.
+#     )
+#   def forward(self,X):
+#     means = self.model(X)
+#     stds = torch.clamp(self.std.exp(),1e-3,50)#편차의 범위를 바꿔버린다.
+#     return torch.distributions.Normal(means,stds)
+
+# class Actor_best_output_std(nn.Module):
+#   def __init__(self,state_dim, n_actions, std,activation=nn.ReLU):
+#     super().__init__()
+#     self.n_actions =n_actions
+#     self.model = nn.Sequential(
+#       nn.Linear(state_dim,512),
+#       activation(),
+#       nn.Linear(512,256),
+#       activation(),
+#       nn.Linear(256,64),
+#       nn.Tanh(),
+#       nn.Linear(64,n_actions*2)## 모델의 평균수만큼 반환합니다.
+#     )
+#   def forward(self,X):
+#     means = self.model(X)
+#     stds = torch.clamp(self.std.exp(),1e-3,50)#편차의 범위를 바꿔버린다.
+#     return torch.distributions.Normal(means,stds)
 
 class Critic_best(nn.Module):
   def __init__(self, state_dim, activation=nn.ReLU):
