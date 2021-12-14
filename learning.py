@@ -84,9 +84,13 @@ class A2CLearner():
     episodes =max_episode
     episode_length =300
     total_steps = (episode_length*episodes)//step_on_memory
-    
+    print("전체 스텝수 : ",total_steps)
+    ten = total_steps//30
     for i in range(total_steps):
       memory = runner.run(step_on_memory,self.actor,writer)
+      if i%ten ==0:
+        torch.save(self.actor.state_dict(),"./model_weight/temp_model/"+str(i)+" actor.pth")
+        torch.save(self.critic.state_dict(),"./model_weight/temp_model/"+str(i)+" critic.pth")
       self.learn(memory,writer,i)
   
   def view(self,env):

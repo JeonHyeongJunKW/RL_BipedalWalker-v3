@@ -8,7 +8,7 @@ def t(x):
 
 def model_tester(mode_name,type,std,state_dim=24,n_actions=4):
   if type =="best":
-    test_model = Actor_best(state_dim,n_actions,0.1)
+    test_model = Actor_best(state_dim,n_actions,0.4)
   elif type =="origin":
     test_model = Actor(state_dim,n_actions)
   model_name = './model_weight/'+mode_name
@@ -17,7 +17,7 @@ def model_tester(mode_name,type,std,state_dim=24,n_actions=4):
   test_model.eval()
   env = gym.make('BipedalWalker-v3')
   state = env.reset()
-  for j in range(1):
+  for j in range(10):
     state = env.reset()
     re_sum =0
     while True:
