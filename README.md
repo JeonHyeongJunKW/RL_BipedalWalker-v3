@@ -23,19 +23,30 @@ example)
 ```
 sudo sh setup.sh
 ```
-
+# 파일별 설명 
 ### simple_render_test.py
 : 2021/12/10에 간단하게 Bipedal Walker의 랜더링을 구현한것입니다.
-
 
 ### main_run.py
 : 2021/12/11에 간단하게 Bipedal Walker에 대한 A2C 학습모델을 만든것입니다. 
 
-### main_learning_test.ipynb
+### main_hyperparameter_get.ipynb
 : 2021/12/12에 Bipedal Walker에 대한 하이퍼파라미터 튜닝을 위한 jupyter notebook code
 
-### model_test.py
-: 2021/12/13에 간단하게 완성된 모델입니다. 추가적인 학습이 필요합니다. 
+### more_learning.ipynb
+: 2021/12/15에 Bipedal Walker의 모델중에서 학습률이 높은 코드를 위주로 학습시키기 위한  jupyter notebook code
+
+### add_new_parameter.ipynb
+: 2021/12/15에 Bipedal Walker의 보상에 추가적인 파라미터를 넣어서 학습시키기 위한 jupyter notebook code
+
+### model_test.py, model_tester.py
+: 2021/12/13에 완성된 모델을 테스트하기 위한 코드입니다. 
+
+### Runner.py, Runner_otherReward.py, Runner_otherReward2.py
+: 2021/12/15에 기본 보상(Runner.py)에 추가적인 라이다 거리(Runner_otherReward.py, Runner_otherReward2.py)
+
+와 이동속도를 넣은 것입니다.(Runner_otherReward2.py)
+
 
 # 모델별 성능테스트 
 
@@ -51,6 +62,9 @@ sudo sh setup.sh
 <img width = "300" src="https://user-images.githubusercontent.com/63538314/145970221-32bbbf7a-c0d4-41ba-b8e9-815c38b5b872.png">
 
 
-## Update
+# Update
 2021/12/13 : 모델구조 및 하이퍼파라미터 수정(학습에 사용되는 batch size 조정)
+
 2021/12/14 : 최종학습모델 튜닝(이전과 다르게 새로운 포즈로 이동시도중)
+
+2021/12/15 : 모델의 보상에 추가 보상 더함. (라이다 거리와 이동속도), 아직은 좋은 성능을 내지 못함

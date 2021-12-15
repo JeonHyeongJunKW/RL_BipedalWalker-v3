@@ -2,6 +2,7 @@ from Critic_and_Actor import Actor,Actor_best
 import gym
 import numpy as np
 import torch
+from gym.wrappers.monitoring import video_recorder
 def t(x):
     x = np.array(x) if not isinstance(x, np.ndarray) else x
     return torch.from_numpy(x).float()
@@ -16,12 +17,14 @@ def model_tester(mode_name,type,std,state_dim=24,n_actions=4):
   test_model.load_state_dict(torch.load(model_name))
   test_model.eval()
   env = gym.make('BipedalWalker-v3')
+  vid  = video_recorder.VideoRecorder(env,path="./new_record/test.mp4")
   state = env.reset()
-  for j in range(10):
+  for j in range(1):
     state = env.reset()
     re_sum =0
     while True:
       env.render()
+      vid.capture_frame()
       dists = test_model(t(state))
       actions = dists.sample().detach().cpu().data.numpy()
       actions_clipped = np.clip(actions, env.action_space.low.min(), env.action_space.high.max())
